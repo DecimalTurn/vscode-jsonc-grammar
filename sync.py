@@ -70,7 +70,7 @@ if not response.ok:
         file.write(str(retries))
         file.truncate()
     
-    if retries <= retries_limit:
+    if retries >= retries_limit:
         print("Retries exceeded. Disabling the program")
         with open('disable.txt', 'w') as file:
             file.write("True")
