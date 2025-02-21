@@ -1,13 +1,11 @@
-# Let's make an action that runs our sync script every day at 12:00 UTC
 name: Sync
 description: Sync the data from the source to the destination
+permissions:
+  contents: write
 on:
   schedule:
     - cron: '0 12 * * *'
   workflow_dispatch:
-  #Permission to write to the repository 
-  permissions:
-    contents: write
 jobs:
   sync:
     runs-on: ubuntu-latest
