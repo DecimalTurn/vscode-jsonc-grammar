@@ -23,6 +23,9 @@ with open("JSONC.tmLanguage.json", "r") as file:
 
 # Let's run the git commands to update the file
 
+os.system("git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'")
+os.system("git config --global user.name 'github-actions[bot]'")
+
 os.system("git add JSONC.tmLanguage.json")
 os.system("git commit -m 'Updated JSONC.tmLanguage.json'")
 os.system("git push")
