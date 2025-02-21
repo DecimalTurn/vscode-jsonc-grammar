@@ -53,7 +53,7 @@ if os.path.exists("disabled.txt"):
             print("The program is disabled. Exiting")
             exit(0)
 
-url = "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/json/syntaxes/JSONC.tmLanguage.json-test-error"
+url = "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/json/syntaxes/JSONC.tmLanguage.json"
 response = requests.get(url)
 
 
