@@ -1,7 +1,7 @@
 import requests
 import os
 
-def run_update():
+def run_update(commit_message):
 
     # Let's run the git commands to update the file
 
@@ -11,7 +11,7 @@ def run_update():
     os.system("git add JSONC.tmLanguage.json")
     os.system("git add retries.txt")
     os.system("git add disabled.txt")
-    os.system("git commit -m 'Updated JSONC.tmLanguage.json'")
+    os.system(f"git commit -m '{commit_message}'")
     os.system("git push")
 
 def create_github_issue(slug, title, body, labels=None):
@@ -84,7 +84,7 @@ if not response.ok:
     else:
         print("Retrying later...")
     
-    run_update()
+    run_update("Updating retry counter")
     exit(0)
 
 else:
@@ -109,4 +109,4 @@ with open("JSONC.tmLanguage.json", "r") as file:
     else:
         print("Files are the same. No need to update")
 
-run_update()
+run_update("Updating JSONC.tmLanguage.json")
