@@ -1,1 +1,1 @@
-# vscode-jsonc-syntaxe
+# vscode-jsonc-syntax-highlighting
