@@ -4,8 +4,8 @@ import os
 url = "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/json/syntaxes/JSONC.tmLanguage.json"
 response = requests.get(url)
 
-# Let's use the hash of the file to check if we need to update it
-remote_hash = response.headers['ETag']
+# Let's use the hash of the file content to check if we need to update it
+remote_hash = hash(response.text)
 print(f"Remote Hash: {remote_hash}")
 
 # Let's read the local file
