@@ -49,7 +49,7 @@ response = requests.get(url)
 if not response.ok:
     print(f"🔴 Error: {response.status_code}")
     print(response.text)
-    create_github_issue("microsoft/vscode", "Failed to fetch JSONC.tmLanguage.json", response.text)
+    
 
     # Increase the retries count in retries.txt
     retries = 0
@@ -65,7 +65,7 @@ if not response.ok:
         print("Retries exceeded. Disabling the program")
         with open('disable.txt', 'w') as file:
             file.write("True")
-        create_github_issue(os.getenv('GITHUB_REPOSITORY'), "Issue with the data collection", "The request returned an error", ["bug"])
+        create_github_issue(os.getenv('GITHUB_REPOSITORY'), "Failed to fetch JSONC.tmLanguage.json", response.text, ["bug"])
         exit(0)
 
     exit(1)
