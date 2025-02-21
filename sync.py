@@ -72,12 +72,13 @@ if not response.ok:
         file.write(str(retries))
         file.truncate()
     
-    if retries == retries_limit:
+    if retries == retries_limit + 1:
         print("Retries exceeded. Disabling the program")
         with open('disabled.txt', 'w') as file:
             file.write("True")
         create_github_issue(os.getenv('GITHUB_REPOSITORY'), "Failed to fetch JSONC.tmLanguage.json", response.text, ["bug"])
-    elif retries >= retries_limit:
+    elif retries > retries_limit + 1:
+        # This should never happen, but just in case
         print("Retries exceeded. Disabling the program")
         with open('disabled.txt', 'w') as file:
             file.write("True")
