@@ -1,8 +1,11 @@
 import requests
 import os
 
-url = "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/json/syntaxes/JSONC.tmLanguage.json"
+url = "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/json/syntaxes/JSONC.tmLanguage.json-test-error"
 response = requests.get(url)
+
+# If the request returned an error, let's stop the script and return the error
+response.raise_for_status()
 
 # Let's use the hash of the file content to check if we need to update it
 remote_hash = hash(response.text)
