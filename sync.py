@@ -45,8 +45,8 @@ def create_github_issue(slug, title, body, labels=None):
 retries_limit = 3
 
 # If the disable.txt file exists and contains the word "True", exit the program
-if os.path.exists("disable.txt"):
-    with open('disable.txt') as file:
+if os.path.exists("disabled.txt"):
+    with open('disabled.txt') as file:
         if file.readline().strip() == "True":
             print("The program is disabled. Exiting")
             exit(0)
@@ -70,14 +70,20 @@ if not response.ok:
         file.write(str(retries))
         file.truncate()
     
-    if retries >= retries_limit:
+    if retries == retries_limit:
         print("Retries exceeded. Disabling the program")
-        with open('disable.txt', 'w') as file:
+        with open('disabled.txt', 'w') as file:
             file.write("True")
         create_github_issue(os.getenv('GITHUB_REPOSITORY'), "Failed to fetch JSONC.tmLanguage.json", response.text, ["bug"])
-        exit(0)
-
+    elif retries >= retries_limit:
+        print("Retries exceeded. Disabling the program")
+        with open('disabled.txt', 'w') as file:
+            file.write("True")
+    else:
+        print("Retrying later...")
+    
     run_update()
+    exit(0)
 
 else:
     print("🟢 Request successful")
