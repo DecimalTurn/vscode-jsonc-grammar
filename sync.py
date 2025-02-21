@@ -9,6 +9,8 @@ def run_update():
     os.system("git config --global user.name 'github-actions[bot]'")
 
     os.system("git add JSONC.tmLanguage.json")
+    os.system("git add retries.txt")
+    os.system("git add disabled.txt")
     os.system("git commit -m 'Updated JSONC.tmLanguage.json'")
     os.system("git push")
 
