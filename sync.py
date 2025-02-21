@@ -1,6 +1,16 @@
 import requests
 import os
 
+def run_update():
+
+    # Let's run the git commands to update the file
+
+    os.system("git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'")
+    os.system("git config --global user.name 'github-actions[bot]'")
+
+    os.system("git add JSONC.tmLanguage.json")
+    os.system("git commit -m 'Updated JSONC.tmLanguage.json'")
+    os.system("git push")
 
 def create_github_issue(slug, title, body, labels=None):
 
@@ -50,7 +60,6 @@ if not response.ok:
     print(f"🔴 Error: {response.status_code}")
     print(response.text)
     
-
     # Increase the retries count in retries.txt
     retries = 0
     with open('retries.txt', 'r+') as file:
@@ -61,14 +70,15 @@ if not response.ok:
         file.write(str(retries))
         file.truncate()
     
-    if retries >= retries_limit:
+    if retries <= retries_limit:
         print("Retries exceeded. Disabling the program")
         with open('disable.txt', 'w') as file:
             file.write("True")
         create_github_issue(os.getenv('GITHUB_REPOSITORY'), "Failed to fetch JSONC.tmLanguage.json", response.text, ["bug"])
         exit(0)
 
-    exit(1)
+    run_update()
+
 else:
     print("🟢 Request successful")
     with open('retries.txt', 'w') as file:
@@ -91,13 +101,4 @@ with open("JSONC.tmLanguage.json", "r") as file:
     else:
         print("Files are the same. No need to update")
 
-# Let's run the git commands to update the file
-
-os.system("git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'")
-os.system("git config --global user.name 'github-actions[bot]'")
-
-os.system("git add JSONC.tmLanguage.json")
-os.system("git commit -m 'Updated JSONC.tmLanguage.json'")
-os.system("git push")
-
-
+run_update()
