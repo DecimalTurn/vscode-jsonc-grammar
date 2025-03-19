@@ -47,4 +47,23 @@
     }
   ],
 
-  // A deeply
+  // A deeply nested object
+  "company": {
+    "name": "Tech Corp",
+    "location": {
+      "country": "USA",
+      "state": "California",
+      "city": "San Francisco"
+    },
+    "departments": [
+      {
+        "name": "Engineering",
+        "employees": 120
+      },
+      {
+        "name": "Marketing",
+        "employees": 50
+      }
+    ]
+  }
+}
