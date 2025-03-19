@@ -15,7 +15,7 @@ def run_update(commit_message):
     os.system("git push")
 
 def format_grammar(data):
-    # Turns out that the token used for the keys in the JSONC.tmLanguage.json file Support.Type which 
+    # Turns out that the token used for the keys in the JSONC.tmLanguage.json file is "support.type" which 
     # doesn't give a nice contrast with the string and other contant values.
     # Instead, we replace "support.type" with "entity.name.tag" to give a better contrast similar as what is used in the JSON grammar (https://github.com/Nixinova/NovaGrammars/blob/main/grammars/json.yaml-tmLanguage)
     data = data.replace('support.type', 'entity.name.tag')
