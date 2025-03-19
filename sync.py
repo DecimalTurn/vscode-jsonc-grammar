@@ -14,6 +14,13 @@ def run_update(commit_message):
     os.system(f"git commit -m '{commit_message}'")
     os.system("git push")
 
+def format_grammar(data):
+    # Turns out that the token used for the keys in the JSONC.tmLanguage.json file Support.Type which 
+    # doesn't give a nice contrast with the string and other contant values.
+    # Instead, we replace "support.type" with "entity.name.tag" to give a better contrast similar as what is used in the JSON grammar (https://github.com/Nixinova/NovaGrammars/blob/main/grammars/json.yaml-tmLanguage)
+    data = data.replace('support.type', 'entity.name.tag')
+    return data
+
 def create_github_issue(slug, title, body, labels=None):
 
     token = os.getenv('GITHUB_TOKEN')
@@ -94,7 +101,8 @@ else:
         file.write("0")
 
 # Let's use the hash of the file content to check if we need to update it
-remote_hash = hash(response.text)
+remote_grammar_formatted = format_grammar(response.text)
+remote_hash = hash(remote_grammar_formatted)
 print(f"Remote Hash: {remote_hash}")
 
 # Let's read the local file
@@ -106,7 +114,7 @@ with open("syntaxes/JSONC.tmLanguage.json", "r") as file:
     if remote_hash != local_hash:
         print("Files are different. Updating local file")
         with open("syntaxes/JSONC.tmLanguage.json", "w") as file:
-            file.write(response.text)
+            file.write(remote_grammar_formatted)
     else:
         print("Files are the same. No need to update")
 
