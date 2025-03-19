@@ -1,0 +1,50 @@
+{
+  // A string data type
+  "name": "John Doe",
+
+  // A number (integer and float)
+  "age": 30,
+  "height": 5.9,
+
+  // A boolean value
+  "isEmployed": true,
+
+  // A null value
+  "spouse": null,
+
+  // An array of strings
+  "hobbies": [
+    "reading",
+    "gaming",
+    "hiking"
+  ],
+
+  // An array of mixed types (not common in strongly typed systems)
+  "mixedArray": [
+    42,          // number
+    "hello",     // string
+    false,       // boolean
+    null,        // null
+    { "key": "value" } // object
+  ],
+
+  // A nested object
+  "address": {
+    "street": "123 Main St",
+    "city": "Somewhere",
+    "postalCode": "12345"
+  },
+
+  // An array of objects
+  "contacts": [
+    {
+      "type": "email",
+      "value": "john.doe@example.com"
+    },
+    {
+      "type": "phone",
+      "value": "+1234567890"
+    }
+  ],
+
+  // A deeply
