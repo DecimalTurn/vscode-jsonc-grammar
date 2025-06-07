@@ -1,5 +1,6 @@
 import requests
 import os
+import re
 
 def run_update(commit_message):
 
