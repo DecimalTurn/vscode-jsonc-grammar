@@ -168,7 +168,7 @@
 					"name": "punctuation.entity.name.tag.property-name.end.json.comments"
 				}
 			},
-			"name": "string.json.comments entity.name.tag.property-name.json.comments",
+			"name": "entity.name.tag.property-name.json.comments string.json.comments",
 			"patterns": [
 				{
 					"include": "#stringcontent"
