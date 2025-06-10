@@ -3,7 +3,8 @@ name: TextMate Grammar Installation (JSONC from .tmLanguage.json)
 on:
   workflow_dispatch:
   push:
-    - main
+    branches:
+      - main
 
 jobs:
   screenshot:
