@@ -32,6 +32,13 @@ jobs:
         run: |
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
           plutil -convert xml1 syntaxes/JSONC.tmLanguage.json -o JSONC.plist
+          
+          # Display the resulting plist file content
+          echo "Content of the generated JSONC.plist file:"
+          cat JSONC.plist
+          
+          # Keep a copy of the original plist file
+          cp JSONC.plist JSONC_converted.plist
 
       - name: Open file in TextMate (before installing grammar)
         run: |
