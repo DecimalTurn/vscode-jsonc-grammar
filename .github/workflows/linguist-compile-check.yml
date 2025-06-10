@@ -32,6 +32,7 @@ jobs:
           pwd
           ls
           cd ..
+          pwd
 
       - name: Check if script/add-grammar exists
         run: |
