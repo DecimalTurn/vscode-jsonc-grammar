@@ -27,6 +27,9 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/github-linguist/linguist.git
           cd linguist
+          cd script
+          ls
+          cd ..
 
       - name: Check if script/add-grammar exists
         run: |
