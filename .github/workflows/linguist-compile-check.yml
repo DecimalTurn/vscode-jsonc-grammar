@@ -65,11 +65,18 @@ jobs:
           git config --remove-section submodule.vendor/grammars/vscode-jsonc-syntax-highlighting 2>/dev/null || true
           
           # Add more verbose output for the compilation step
-          echo "Running add-grammar script with --replace option..."
-          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
+          echo "Running add-grammar script..."
+          ./script/add-grammar vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
             echo "Grammar compilation failed with error code $?"
-            echo "Contents of submodule directory:"
-            ls -la vendor/grammars/vscode-jsonc-syntax-highlighting
-            exit 1
+            echo "Contents of grammars directory:"
+            ls -la vendor/grammars/
+            echo "Trying alternative approach..."
+            # If first approach fails, try forcefully
+            git config --global user.email "github-actions@github.com"
+            git config --global user.name "GitHub Actions"
+            ./script/add-grammar --debug vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
+              echo "Alternative approach failed with error code $?"
+              exit 1
+            }
           }
           echo "Grammar compilation completed successfully"
