@@ -1,4 +1,4 @@
-name: TextMate Grammar Installation (JSONC from .tmLanguage.json)
+name: TextMate Grammar Screenshot
 
 on:
   workflow_dispatch:
@@ -34,22 +34,14 @@ jobs:
           plutil -convert xml1 syntaxes/JSONC.tmLanguage.json -o JSONC.plist
           
           # Display the resulting plist file content
-          echo "Content of the generated JSONC.plist file:"
-          cat JSONC.plist
-          
-          # Keep a copy of the original plist file
-          cp JSONC.plist JSONC_converted.plist
+          # echo "Content of the generated JSONC.plist file:"
+          # cat JSONC.plist
 
       - name: Open file in TextMate (before installing grammar)
         run: |
           echo "Opening TextMate with sample.jsonc (pre-grammar)..."
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
-
-      - name: Take screenshot before grammar install
-        run: |
-          mkdir -p screenshots
-          screencapture -x screenshots/before_grammar.png
 
       - name: Create JSONC.tmbundle and install from repo
         run: |
@@ -87,7 +79,8 @@ jobs:
       - name: Reload TextMate bundles
         run: |
           echo "Reloading TextMate bundles..."
-          osascript reload_bundles.scpt || echo "⚠️ AppleScript failed"
+          echo "The following line usually returns an error, but bundles are still reloaded"
+          osascript reload_bundles.scpt || echo "⚠️ AppleScript error encountered"
           
           # Alternative reload method
           pkill -f TextMate || true
@@ -107,7 +100,7 @@ jobs:
           ls -l ~/Library/Application\ Support/TextMate/Bundles || echo "No bundles found"
 
       - name: Take screenshot after grammar install
-        run: screencapture -x screenshots/after_grammar.png
+        run: screencapture -x screenshots/textmate.png
 
       - name: Upload screenshot artifacts
         uses: actions/upload-artifact@v4
