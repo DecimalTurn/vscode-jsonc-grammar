@@ -28,6 +28,13 @@ jobs:
           git clone --depth 1 https://github.com/github-linguist/linguist.git
           cd linguist
 
+      - name: Check if script/add-grammar exists
+        run: |
+          if [ ! -f script/add-grammar ]; then
+            echo "script/add-grammar not found. Please run 'bundle exec rake add_grammar' to generate it."
+            exit 1
+          fi
+
       - name: Compile linguist grammar
         run: |
           script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
