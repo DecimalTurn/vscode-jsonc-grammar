@@ -28,10 +28,10 @@ def format_grammar(data):
         data
     )
 
-    # Insert UUID for TextMate compatibility
+    # Insert UUID and fileTypes after the "name": "JSON with Comments" line
     data = re.sub(
         r'("name":\s*"JSON with Comments",)',
-        r'\1\n\t"uuid": "a58dd7e9-a414-4300-8760-1f2857b80a44",',
+        r'\1\n\t"uuid": "a58dd7e9-a414-4300-8760-1f2857b80a44",\n\t"fileTypes": [\n\t\t"jsonc"\n\t],',
         data
     )
     
