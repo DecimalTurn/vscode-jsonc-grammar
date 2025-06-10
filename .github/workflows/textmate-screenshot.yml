@@ -1,0 +1,90 @@
+name: TextMate Grammar Installation (JSONC from .tmLanguage.json)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshot:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install TextMate
+        run: brew install --cask textmate
+
+      - name: Configure TextMate dark theme (not working at the moment)
+        run: |
+          echo "Configuring TextMate to use dark theme..."
+          # Create the defaults directory if it doesn't exist
+          mkdir -p ~/Library/Preferences
+          # Set the theme to dark mode
+          defaults write com.macromates.TextMate darkTheme 1
+          # Optional: Set a dark color theme
+          defaults write com.macromates.TextMate themeUUID 73800312-B535-4131-8F05-C96776896BC6
+          echo "TextMate dark theme configured"
+
+      - name: Convert JSON to PLIST
+        run: |
+          echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
+          plutil -convert xml1 syntaxes/JSONC.tmLanguage.json -o JSONC.plist
+
+      - name: Create JSONC.tmbundle and install from repo
+        run: |
+          mkdir -p ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes
+          mkdir -p ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Preferences
+          
+          # Copy the local grammar file from the repo to the bundle
+          cp JSONC.plist ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes/
+          
+          # Create info.plist with proper bundle information
+          cat <<EOF > ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>contactEmailRot13</key>
+            <string>admin@example.com</string>
+            <key>contactName</key>
+            <string>JSONC Bundle</string>
+            <key>description</key>
+            <string>Support for JSONC configuration files</string>
+            <key>name</key>
+            <string>JSONC</string>
+            <key>uuid</key>
+            <string>$(uuidgen)</string>
+          </dict>
+          </plist>
+          EOF
+          
+          # Print some debug info
+          echo "Created JSONC bundle at: ~/Library/Application Support/TextMate/Bundles/JSONC.tmbundle"
+          ls -la ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes/
+            
+          
+      - name: Reload TextMate bundles
+        run: |
+          echo "Reloading TextMate bundles..."
+          osascript reload_bundles.scpt || echo "⚠️ AppleScript failed"
+          
+          # Alternative reload method
+          pkill -f TextMate || true
+          sleep 2
+          
+      - name: Open TextMate with sample.jsonc
+        run: |
+          echo "Starting TextMate to ensure grammar takes effect..."
+          pkill -f TextMate || true
+          sleep 2
+          open -a "/Applications/TextMate.app" sample.jsonc
+          sleep 5
+
+      - name: Take screenshot after grammar install
+        run: screencapture -x screenshots/textmate_screenshot.png
+
+      - name: Upload screenshot artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: textmate-jsonc-syntax-screenshots
+          path: screenshots/*.png
