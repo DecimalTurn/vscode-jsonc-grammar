@@ -56,6 +56,14 @@ jobs:
           echo "Checking for any local modifications in the submodule:"
           git status vendor/grammars/vscode-jsonc-syntax-highlighting
           
+          # Clean up the submodule first to avoid the "local modifications" error during deregistration
+          echo "Cleaning up submodule before compilation..."
+          # Remove the submodule directory to avoid the "local modifications" error
+          git submodule deinit -f vendor/grammars/vscode-jsonc-syntax-highlighting
+          rm -rf .git/modules/vendor/grammars/vscode-jsonc-syntax-highlighting
+          rm -rf vendor/grammars/vscode-jsonc-syntax-highlighting
+          git config --remove-section submodule.vendor/grammars/vscode-jsonc-syntax-highlighting 2>/dev/null || true
+          
           # Add more verbose output for the compilation step
           echo "Running add-grammar script with --replace option..."
           ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
