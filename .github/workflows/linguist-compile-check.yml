@@ -1,0 +1,48 @@
+# This github action checks if the grammar in this repo will compile with the latest version of linguist.
+# Works on all branches and pull requests to main.
+# Use the linguist image:
+# Available versions: https://github.com/devcontainers/images/tree/main/src/ruby
+#FROM mcr.microsoft.com/devcontainers/ruby
+#RUN apt update && apt install -y cmake
+
+name: Linguist Compile Check
+on:
+  push:
+    branches:
+      - main
+      - '*'
+
+jobs:
+  compile-check:
+    
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: linguist
+
+    steps:
+
+      - name: Clone linguist
+        working-directory: ${{ github.workspace }}
+        run: |
+          git clone --depth 1 https://github.com/github-linguist/linguist.git
+
+      - name: Update specific submodule
+        working-directory: ${{ github.workspace }}/linguist
+        run: |
+          echo "Initializing submodules..."
+          git submodule init
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: linguist
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Compile linguist grammar
+        working-directory: ${{ github.workspace }}/linguist
+        run: |
+          echo "Starting grammar compilation process..."
+          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
