@@ -33,6 +33,12 @@ jobs:
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
           plutil -convert xml1 syntaxes/JSONC.tmLanguage.json -o JSONC.plist
 
+      - name: Open file in TextMate (before installing grammar)
+        run: |
+          echo "Opening TextMate with sample.jsonc (pre-grammar)..."
+          open -a "/Applications/TextMate.app" sample.jsonc
+          sleep 5
+
       - name: Create JSONC.tmbundle and install from repo
         run: |
           mkdir -p ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes
