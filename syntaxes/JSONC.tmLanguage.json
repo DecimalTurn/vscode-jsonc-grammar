@@ -73,7 +73,7 @@
 							"name": "punctuation.definition.comment.json.comments"
 						}
 					},
-					"match": "(//).*$\\n?",
+					"match": "(?<=\\s*|\\t*)(//).*$\\n?",
 					"name": "comment.line.double-slash.js"
 				}
 			]
