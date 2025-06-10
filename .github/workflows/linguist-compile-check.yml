@@ -36,6 +36,7 @@ jobs:
 
       - name: Check if script/add-grammar exists
         run: |
+          cd linguist
           if [ ! -f ./script/add-grammar ]; then
             echo "./script/add-grammar not found."
             exit 1
@@ -43,4 +44,5 @@ jobs:
 
       - name: Compile linguist grammar
         run: |
+          cd linguist
           ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
