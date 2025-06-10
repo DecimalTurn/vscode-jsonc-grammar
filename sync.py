@@ -27,6 +27,13 @@ def format_grammar(data):
         '"name": "entity.name.tag.property-name.json.comments string.json.comments"',
         data
     )
+
+    # Insert UUID for TextMate compatibility
+    data = re.sub(
+        r'("name":\s*"JSON with Comments",)',
+        r'\1\n\t"uuid": "a58dd7e9-a414-4300-8760-1f2857b80a44",',
+        data
+    )
     
     return data
 
