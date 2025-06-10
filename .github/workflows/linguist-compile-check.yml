@@ -10,7 +10,6 @@ on:
   push:
     branches:
       - main
-      - '*'
 
 jobs:
   compile-check:
@@ -27,12 +26,8 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           git clone --depth 1 https://github.com/github-linguist/linguist.git
-
-      - name: Update specific submodule
-        working-directory: ${{ github.workspace }}/linguist
-        run: |
-          echo "Initializing submodules..."
-          git submodule init
+          cd linguist
+          git submodule init         
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -42,7 +37,4 @@ jobs:
           bundler-cache: true
 
       - name: Compile linguist grammar
-        working-directory: ${{ github.workspace }}/linguist
-        run: |
-          echo "Starting grammar compilation process..."
-          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
+        run: ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
