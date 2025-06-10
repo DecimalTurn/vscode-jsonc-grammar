@@ -27,14 +27,16 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           git clone --depth 1 https://github.com/github-linguist/linguist.git
-          cd linguist
 
       - name: Update specific submodule
+        working-directory: ${{ github.workspace }}/linguist
         run: |
-          # Initialize submodules
+          echo "Initializing submodules..."
           git submodule init
-          # Update only the vscode-jsonc-syntax-highlighting submodule
-          git submodule update --remote vendor/grammars/vscode-jsonc-syntax-highlighting
+          echo "Forcefully updating the vscode-jsonc-syntax-highlighting submodule..."
+          # Use -f to force discard local changes in the submodule
+          git submodule update --force --remote vendor/grammars/vscode-jsonc-syntax-highlighting
+          echo "Submodule update completed"
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -44,5 +46,22 @@ jobs:
           bundler-cache: true
 
       - name: Compile linguist grammar
+        working-directory: ${{ github.workspace }}/linguist
         run: |
-          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
+          echo "Starting grammar compilation process..."
+          # Check submodule status before proceeding
+          echo "Current submodule status:"
+          git submodule status
+          
+          echo "Checking for any local modifications in the submodule:"
+          git status vendor/grammars/vscode-jsonc-syntax-highlighting
+          
+          # Add more verbose output for the compilation step
+          echo "Running add-grammar script with --replace option..."
+          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
+            echo "Grammar compilation failed with error code $?"
+            echo "Contents of submodule directory:"
+            ls -la vendor/grammars/vscode-jsonc-syntax-highlighting
+            exit 1
+          }
+          echo "Grammar compilation completed successfully"
