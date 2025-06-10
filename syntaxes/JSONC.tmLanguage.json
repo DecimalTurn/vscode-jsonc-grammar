@@ -48,7 +48,7 @@
 		"comments": {
 			"patterns": [
 				{
-					"begin": "/\\*\\*(?!/)",
+					"begin": "(?<=\\s*)/\\*\\*(?!/)",
 					"captures": {
 						"0": {
 							"name": "punctuation.definition.comment.json.comments"
