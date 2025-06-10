@@ -33,10 +33,6 @@ jobs:
         run: |
           echo "Initializing submodules..."
           git submodule init
-          echo "Forcefully updating the vscode-jsonc-syntax-highlighting submodule..."
-          # Use -f to force discard local changes in the submodule
-          git submodule update --force --remote vendor/grammars/vscode-jsonc-syntax-highlighting
-          echo "Submodule update completed"
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -49,53 +45,4 @@ jobs:
         working-directory: ${{ github.workspace }}/linguist
         run: |
           echo "Starting grammar compilation process..."
-          # Check submodule status before proceeding
-          echo "Current submodule status:"
-          git submodule status
-          
-          echo "Checking for any local modifications in the submodule:"
-          git status vendor/grammars/vscode-jsonc-syntax-highlighting
-          
-          # Clean up the submodule first to avoid the "local modifications" error during deregistration
-          echo "Cleaning up submodule before compilation..."
-          # Remove the submodule directory to avoid the "local modifications" error
-          git submodule deinit -f vendor/grammars/vscode-jsonc-syntax-highlighting
-          rm -rf .git/modules/vendor/grammars/vscode-jsonc-syntax-highlighting
-          rm -rf vendor/grammars/vscode-jsonc-syntax-highlighting
-          git config --remove-section submodule.vendor/grammars/vscode-jsonc-syntax-highlighting 2>/dev/null || true
-          
-          # Add more verbose output for the compilation step
-          echo "Running add-grammar script..."
-          ./script/add-grammar vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
-            echo "Grammar compilation failed with error code $?"
-            echo "Contents of grammars directory:"
-            ls -la vendor/grammars/
-            echo "Trying alternative approach with force..."
-            
-            # If first approach fails, try with verbose debugging
-            git config --global user.email "github-actions@github.com"
-            git config --global user.name "GitHub Actions"
-            
-            # Print help to see available options
-            echo "Available add-grammar options:"
-            ./script/add-grammar --help || echo "No help available"
-            
-            # Try with -f option to force
-            echo "Trying with force option..."
-            ./script/add-grammar -f vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
-              echo "Force approach failed with error code $?"
-              
-              # Final attempt with manual clone
-              echo "Trying manual approach..."
-              mkdir -p vendor/grammars/vscode-jsonc-syntax-highlighting
-              cd vendor/grammars
-              git clone https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting.git vscode-jsonc-syntax-highlighting
-              cd ../..
-              echo "Manual clone completed, attempting to register grammar..."
-              bundle exec ruby script/convert-grammars --no-install --no-remote vendor/grammars/vscode-jsonc-syntax-highlighting || {
-                echo "Manual approach failed with error code $?"
-                exit 1
-              }
-            }
-          }
-          echo "Grammar compilation completed successfully"
+          ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
