@@ -14,7 +14,13 @@ on:
 
 jobs:
   compile-check:
+    
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: linguist
+
     steps:
 
       - name: Set up Ruby
@@ -24,25 +30,14 @@ jobs:
           bundler-cache: true
 
       - name: Clone linguist
+        working-directory: ${{ github.workspace }}
         run: |
           git clone --depth 1 https://github.com/github-linguist/linguist.git
           cd linguist
           bundle install
-          cd script
-          pwd
-          ls
-          cd ..
-          pwd
 
-      - name: Check if script/add-grammar exists
-        run: |
-          cd linguist
-          if [ ! -f ./script/add-grammar ]; then
-            echo "./script/add-grammar not found."
-            exit 1
-          fi
+
 
       - name: Compile linguist grammar
         run: |
-          cd linguist
           ./script/add-grammar --replace vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting
