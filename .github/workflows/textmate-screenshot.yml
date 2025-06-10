@@ -100,7 +100,9 @@ jobs:
           ls -l ~/Library/Application\ Support/TextMate/Bundles || echo "No bundles found"
 
       - name: Take screenshot after grammar install
-        run: screencapture -x screenshots/textmate.png
+        run: |
+          mkdir -p screenshots
+          screencapture -x screenshots/textmate.png
 
       - name: Upload screenshot artifacts
         uses: actions/upload-artifact@v4
