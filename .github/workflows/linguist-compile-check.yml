@@ -70,13 +70,32 @@ jobs:
             echo "Grammar compilation failed with error code $?"
             echo "Contents of grammars directory:"
             ls -la vendor/grammars/
-            echo "Trying alternative approach..."
-            # If first approach fails, try forcefully
+            echo "Trying alternative approach with force..."
+            
+            # If first approach fails, try with verbose debugging
             git config --global user.email "github-actions@github.com"
             git config --global user.name "GitHub Actions"
-            ./script/add-grammar --debug vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
-              echo "Alternative approach failed with error code $?"
-              exit 1
+            
+            # Print help to see available options
+            echo "Available add-grammar options:"
+            ./script/add-grammar --help || echo "No help available"
+            
+            # Try with -f option to force
+            echo "Trying with force option..."
+            ./script/add-grammar -f vscode-jsonc-syntax-highlighting https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting || {
+              echo "Force approach failed with error code $?"
+              
+              # Final attempt with manual clone
+              echo "Trying manual approach..."
+              mkdir -p vendor/grammars/vscode-jsonc-syntax-highlighting
+              cd vendor/grammars
+              git clone https://github.com/DecimalTurn/vscode-jsonc-syntax-highlighting.git vscode-jsonc-syntax-highlighting
+              cd ../..
+              echo "Manual clone completed, attempting to register grammar..."
+              bundle exec ruby script/convert-grammars --no-install --no-remote vendor/grammars/vscode-jsonc-syntax-highlighting || {
+                echo "Manual approach failed with error code $?"
+                exit 1
+              }
             }
           }
           echo "Grammar compilation completed successfully"
