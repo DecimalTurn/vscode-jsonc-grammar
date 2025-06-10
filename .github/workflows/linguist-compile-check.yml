@@ -30,10 +30,12 @@ jobs:
           cd linguist
           bundle install
 
-      - name: Update submodules
+      - name: Update specific submodule
         run: |
+          # Initialize submodules
           git submodule init
-          git submodule update --recursive --remote
+          # Update only the vscode-jsonc-syntax-highlighting submodule
+          git submodule update --remote vendor/grammars/vscode-jsonc-syntax-highlighting
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
