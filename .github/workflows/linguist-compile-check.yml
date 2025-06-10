@@ -36,7 +36,10 @@ jobs:
           cd linguist
           bundle install
 
-
+      - name: Update submodules
+        run: |
+          git submodule init
+          git submodule update --recursive --remote
 
       - name: Compile linguist grammar
         run: |
