@@ -83,16 +83,27 @@ jobs:
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
 
-      - name: Configure TextMate dark theme (not working)
+      - name: Configure TextMate dark theme
         run: |
-          echo "Configuring TextMate to use dark theme..."
-          # Create the defaults directory if it doesn't exist
-          mkdir -p ~/Library/Preferences
-          # Set the theme to dark mode
-          defaults write com.macromates.TextMate darkTheme 1
-          # Optional: Set a dark color theme
-          defaults write com.macromates.TextMate themeUUID 73800312-B535-4131-8F05-C96776896BC6
+          echo "Configuring TextMate to use Monokai dark theme..."
+          
+          # Find the Monokai theme UUID
+          THEME_PATH="/Applications/TextMate.app/Contents/SharedSupport/Bundles/Themes.tmbundle/Themes/Monokai.tmTheme"
+          if [ -f "$THEME_PATH" ]; then
+            THEME_UUID=$(plutil -extract uuid xml1 -o - "$THEME_PATH" | grep -oE '[A-F0-9\-]{36}')
+            if [ -n "$THEME_UUID" ]; then
+              defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
+              echo "Set TextMate theme to Monokai ($THEME_UUID)"
+            else
+              echo "Could not extract Monokai theme UUID."
+            fi
+          else
+            echo "Monokai theme not found at $THEME_PATH."
+          fi
           echo "TextMate dark theme configured"
+
+          # Wait for TextMate to apply the theme
+          sleep 2
 
       - name: List installed bundles
         run: |
