@@ -50,7 +50,11 @@ jobs:
             if [ -n "$THEME_UUID" ]; then
               echo "Setting themeUUID in defaults..."
               defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
-              echo "Set TextMate theme to $THEME_NAME ($THEME_UUID)"
+              echo "Removing TextMate preferences plist to force reload..."
+              rm -f ~/Library/Preferences/com.macromates.TextMate.plist || true
+              echo "Re-setting themeUUID in defaults after plist removal..."
+              defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
+              echo "Set TextMate theme to $THEME_NAME ($THEME_UUID) after plist removal"
             else
               echo "Could not extract theme UUID from $THEME_PATH. Trying AppleScript by name."
               osascript -e "tell application \"TextMate\" to activate" -e "tell application \"System Events\" to tell process \"TextMate\" to keystroke \"T\" using {command down, option down}" -e "delay 1" -e "tell application \"System Events\" to keystroke '$THEME_NAME'" -e "delay 1" -e "tell application \"System Events\" to key code 36" || echo "AppleScript theme selection failed."
