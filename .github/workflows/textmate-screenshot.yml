@@ -86,26 +86,32 @@ jobs:
       - name: Configure TextMate dark theme
         run: |
           echo "Configuring TextMate to use a dark theme..."
-          # Try to find Monokai or any dark theme in the TextMate app bundle
-          THEME_PATH=$(find /Applications/TextMate.app -name '*Monokai*.tmTheme' -print -quit)
+          # Try to find Monokai or any dark theme in the app bundle or user directory
+          THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*Monokai*.tmTheme' -print -quit)
           if [ -z "$THEME_PATH" ]; then
             # Fallback: try to find any dark theme
-            THEME_PATH=$(find /Applications/TextMate.app -name '*.tmTheme' | grep -i dark | head -n1)
+            THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*.tmTheme' | grep -i dark | head -n1)
+          fi
+          if [ -z "$THEME_PATH" ]; then
+            # Fallback: pick any available theme
+            THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*.tmTheme' | head -n1)
           fi
           if [ -n "$THEME_PATH" ]; then
+            THEME_NAME=$(basename "$THEME_PATH" .tmTheme)
+            echo "Found theme: $THEME_NAME at $THEME_PATH"
+            # Try to set by UUID if possible
             THEME_UUID=$(plutil -extract uuid xml1 -o - "$THEME_PATH" 2>/dev/null | grep -oE '[A-F0-9\-]{36}')
             if [ -n "$THEME_UUID" ]; then
               defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
-              echo "Set TextMate theme to $(basename "$THEME_PATH") ($THEME_UUID)"
+              echo "Set TextMate theme to $THEME_NAME ($THEME_UUID)"
             else
-              echo "Could not extract theme UUID from $THEME_PATH."
+              echo "Could not extract theme UUID from $THEME_PATH. Trying AppleScript by name."
+              osascript -e "tell application \"TextMate\" to activate" -e "tell application \"System Events\" to tell process \"TextMate\" to keystroke \"T\" using {command down, option down}" -e "delay 1" -e "tell application \"System Events\" to keystroke '$THEME_NAME'" -e "delay 1" -e "tell application \"System Events\" to key code 36" || echo "AppleScript theme selection failed."
             fi
           else
-            echo "No dark theme found in TextMate installation."
+            echo "No theme found in TextMate installation."
           fi
           echo "TextMate dark theme configured"
-
-          # Wait for TextMate to apply the theme
           sleep 2
 
       - name: List installed bundles
