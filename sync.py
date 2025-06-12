@@ -22,11 +22,11 @@ def format_grammar(data):
     data = data.replace('support.type', 'entity.name.tag')
 
    # Also note that for better compatibility, we should avoid having multiple tokens seperated by a space since textmate doesn't deal well with them
-    data = re.sub(
-        r'"name":\s*"string\.json\.comments\s+entity\.name\.tag\.property-name\.json\.comments"',
-        '"name": "entity.name.tag.property-name.json.comments"',
-        data
-    )
+   # data = re.sub(
+   #     r'"name":\s*"string\.json\.comments\s+entity\.name\.tag\.property-name\.json\.comments"',
+   #     '"name": "entity.name.tag.property-name.json.comments"',
+   #     data
+   # )
 
     # Insert UUID and fileTypes after the "name": "JSON with Comments" line
     data = re.sub(
