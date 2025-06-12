@@ -90,17 +90,15 @@ jobs:
 
       - name: Set TextMate theme via AppleScript after opening file
         run: |
-          echo "Setting TextMate theme to Monokai via AppleScript..."
+          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
           osascript \
-            -e 'tell application "TextMate"' \
-            -e '  activate' \
-            -e '  delay 1' \
-            -e '  tell application "System Events"' \
-            -e '    tell process "TextMate"' \
-            -e '      click menu item "Monokai" of menu 1 of menu item "Themes" of menu 1 of menu bar item "View" of menu bar 1' \
-            -e '    end tell' \
-            -e '  end tell' \
-            -e 'end tell'
+            -e 'tell application "TextMate" to activate' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "Monokai"' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to key code 36'
           echo "AppleScript theme selection done. Waiting for UI update..."
           sleep 2
 
