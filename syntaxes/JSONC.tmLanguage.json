@@ -172,7 +172,7 @@
 					"name": "punctuation.entity.name.tag.property-name.end.json.comments"
 				}
 			},
-			"name": "entity.name.tag.property-name.json.comments string.json.comments",
+			"name": "entity.name.tag.property-name.json.comments",
 			"patterns": [
 				{
 					"include": "#stringcontent"
