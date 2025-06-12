@@ -85,20 +85,23 @@ jobs:
 
       - name: Configure TextMate dark theme
         run: |
-          echo "Configuring TextMate to use Monokai dark theme..."
-          
-          # Find the Monokai theme UUID
-          THEME_PATH="/Applications/TextMate.app/Contents/SharedSupport/Bundles/Themes.tmbundle/Themes/Monokai.tmTheme"
-          if [ -f "$THEME_PATH" ]; then
-            THEME_UUID=$(plutil -extract uuid xml1 -o - "$THEME_PATH" | grep -oE '[A-F0-9\-]{36}')
+          echo "Configuring TextMate to use a dark theme..."
+          # Try to find Monokai or any dark theme in the TextMate app bundle
+          THEME_PATH=$(find /Applications/TextMate.app -name '*Monokai*.tmTheme' -print -quit)
+          if [ -z "$THEME_PATH" ]; then
+            # Fallback: try to find any dark theme
+            THEME_PATH=$(find /Applications/TextMate.app -name '*.tmTheme' | grep -i dark | head -n1)
+          fi
+          if [ -n "$THEME_PATH" ]; then
+            THEME_UUID=$(plutil -extract uuid xml1 -o - "$THEME_PATH" 2>/dev/null | grep -oE '[A-F0-9\-]{36}')
             if [ -n "$THEME_UUID" ]; then
               defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
-              echo "Set TextMate theme to Monokai ($THEME_UUID)"
+              echo "Set TextMate theme to $(basename "$THEME_PATH") ($THEME_UUID)"
             else
-              echo "Could not extract Monokai theme UUID."
+              echo "Could not extract theme UUID from $THEME_PATH."
             fi
           else
-            echo "Monokai theme not found at $THEME_PATH."
+            echo "No dark theme found in TextMate installation."
           fi
           echo "TextMate dark theme configured"
 
