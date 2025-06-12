@@ -61,6 +61,14 @@ jobs:
           echo "TextMate dark theme configured"
           sleep 2
 
+      - name: Ensure TextMate is not running and clear saved state
+        run: |
+          echo "Killing all TextMate processes and clearing saved state..."
+          pkill -f TextMate || true
+          sleep 2
+          rm -rf ~/Library/Saved\ Application\ State/com.macromates.TextMate.savedState || true
+          echo "TextMate processes killed and saved state cleared."
+
       - name: Convert JSON to PLIST
         run: |
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
