@@ -24,7 +24,7 @@ def format_grammar(data):
    # Also note that the order seems important, so we need to remove to make sure the "string" token appears after the "entity" token
     data = re.sub(
         r'"name":\s*"string\.json\.comments\s+entity\.name\.tag\.property-name\.json\.comments"',
-        '"name": "entity.name.tag.property-name.json.comments string.json.comments"',
+        '"name": "entity.name.tag.property-name.json.comments"',
         data
     )
 
