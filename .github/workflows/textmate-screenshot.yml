@@ -17,17 +17,6 @@ jobs:
       - name: Install TextMate
         run: brew install --cask textmate
 
-      - name: Configure TextMate dark theme (not working)
-        run: |
-          echo "Configuring TextMate to use dark theme..."
-          # Create the defaults directory if it doesn't exist
-          mkdir -p ~/Library/Preferences
-          # Set the theme to dark mode
-          defaults write com.macromates.TextMate darkTheme 1
-          # Optional: Set a dark color theme
-          defaults write com.macromates.TextMate themeUUID 73800312-B535-4131-8F05-C96776896BC6
-          echo "TextMate dark theme configured"
-
       - name: Convert JSON to PLIST
         run: |
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
@@ -93,6 +82,17 @@ jobs:
           sleep 2
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
+
+      - name: Configure TextMate dark theme (not working)
+        run: |
+          echo "Configuring TextMate to use dark theme..."
+          # Create the defaults directory if it doesn't exist
+          mkdir -p ~/Library/Preferences
+          # Set the theme to dark mode
+          defaults write com.macromates.TextMate darkTheme 1
+          # Optional: Set a dark color theme
+          defaults write com.macromates.TextMate themeUUID 73800312-B535-4131-8F05-C96776896BC6
+          echo "TextMate dark theme configured"
 
       - name: List installed bundles
         run: |
