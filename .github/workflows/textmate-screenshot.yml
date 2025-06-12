@@ -83,6 +83,14 @@ jobs:
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
 
+      - name: Install Monokai dark theme for TextMate
+        run: |
+          echo "Installing Monokai dark theme for TextMate..."
+          mkdir -p ~/Library/Application\ Support/TextMate/Themes
+          curl -fsSL -o ~/Library/Application\ Support/TextMate/Themes/Monokai.tmTheme \
+            https://raw.githubusercontent.com/textmate/monokai.tmbundle/refs/heads/master/Themes/Monokai.tmTheme
+          echo "Monokai.tmTheme installed at ~/Library/Application Support/TextMate/Themes/Monokai.tmTheme"
+
       - name: Configure TextMate dark theme
         run: |
           echo "Configuring TextMate to use a dark theme..."
