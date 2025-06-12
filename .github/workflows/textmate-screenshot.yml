@@ -88,6 +88,22 @@ jobs:
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
 
+      - name: Set TextMate theme via AppleScript after opening file
+        run: |
+          echo "Setting TextMate theme to Monokai via AppleScript..."
+          osascript \
+            -e 'tell application "TextMate"' \
+            -e '  activate' \
+            -e '  delay 1' \
+            -e '  tell application "System Events"' \
+            -e '    tell process "TextMate"' \
+            -e '      click menu item "Monokai" of menu 1 of menu item "Themes" of menu 1 of menu bar item "View" of menu bar 1' \
+            -e '    end tell' \
+            -e '  end tell' \
+            -e 'end tell'
+          echo "AppleScript theme selection done. Waiting for UI update..."
+          sleep 2
+
       - name: Create JSONC.tmbundle and install from repo
         run: |
           mkdir -p ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes
