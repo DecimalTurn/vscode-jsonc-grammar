@@ -87,7 +87,7 @@ jobs:
         run: |
           echo "Configuring TextMate to use a dark theme..."
           echo "Searching for Monokai theme in /Applications/TextMate.app and ~/Library/Application Support/TextMate/Themes..."
-          THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*Monokai*.tmTheme' -print -quit)
+          THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*Monokai*.tmTheme' -print -quit || true)
           echo "THEME_PATH after Monokai search: $THEME_PATH"
           if [ -z "$THEME_PATH" ]; then
             echo "No Monokai theme found, searching for any dark theme..."
