@@ -25,7 +25,7 @@ jobs:
             https://raw.githubusercontent.com/textmate/monokai.tmbundle/refs/heads/master/Themes/Monokai.tmTheme
           echo "Monokai.tmTheme installed at ~/Library/Application Support/TextMate/Themes/Monokai.tmTheme"
 
-      - name: Configure TextMate dark theme
+      - name: Configure TextMate dark theme (method 1)
         run: |
           echo "Configuring TextMate to use a dark theme..."
           echo "Searching for Monokai theme in /Applications/TextMate.app and ~/Library/Application Support/TextMate/Themes..."
@@ -65,13 +65,19 @@ jobs:
           echo "TextMate dark theme configured"
           sleep 2
 
-      - name: Ensure TextMate is not running and clear saved state
+      - name: Set TextMate theme via AppleScript after opening file (method 2)
         run: |
-          echo "Killing all TextMate processes and clearing saved state..."
-          pkill -f TextMate || true
+          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
+          osascript \
+            -e 'tell application "TextMate" to activate' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "Monokai"' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to key code 36'
+          echo "AppleScript theme selection done. Waiting for UI update..."
           sleep 2
-          rm -rf ~/Library/Saved\ Application\ State/com.macromates.TextMate.savedState || true
-          echo "TextMate processes killed and saved state cleared."
 
       - name: Convert JSON to PLIST
         run: |
@@ -87,20 +93,6 @@ jobs:
           echo "Opening TextMate with sample.jsonc (pre-grammar)..."
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
-
-      - name: Set TextMate theme via AppleScript after opening file
-        run: |
-          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
-          osascript \
-            -e 'tell application "TextMate" to activate' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "Monokai"' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to key code 36'
-          echo "AppleScript theme selection done. Waiting for UI update..."
-          sleep 2
 
       - name: Create JSONC.tmbundle and install from repo
         run: |
@@ -133,8 +125,8 @@ jobs:
           # Print some debug info
           echo "Created JSONC bundle at: ~/Library/Application Support/TextMate/Bundles/JSONC.tmbundle"
           ls -la ~/Library/Application\ Support/TextMate/Bundles/JSONC.tmbundle/Syntaxes/
-            
           
+
       - name: Reload TextMate bundles
         run: |
           echo "Reloading TextMate bundles..."
@@ -145,7 +137,7 @@ jobs:
           pkill -f TextMate || true
           sleep 2
           
-      - name: Reopen TextMate with sample.jsonc (should reload bundles)
+      - name: Reopen TextMate with sample.jsonc
         run: |
           echo "Restarting TextMate to ensure grammar takes effect..."
           pkill -f TextMate || true
