@@ -65,20 +65,6 @@ jobs:
           echo "TextMate dark theme configured"
           sleep 2
 
-      - name: Set TextMate theme via AppleScript after opening file (method 2)
-        run: |
-          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
-          osascript \
-            -e 'tell application "TextMate" to activate' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "Monokai"' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to key code 36'
-          echo "AppleScript theme selection done. Waiting for UI update..."
-          sleep 2
-
       - name: Convert JSON to PLIST
         run: |
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
@@ -144,6 +130,20 @@ jobs:
           sleep 2
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
+
+      - name: Set TextMate theme via AppleScript after opening file (method 2)
+        run: |
+          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
+          osascript \
+            -e 'tell application "TextMate" to activate' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to keystroke "Monokai"' \
+            -e 'delay 1' \
+            -e 'tell application "System Events" to key code 36'
+          echo "AppleScript theme selection done. Waiting for UI update..."
+          sleep 2
 
       - name: List installed bundles
         run: |
