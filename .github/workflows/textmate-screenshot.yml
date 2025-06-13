@@ -17,54 +17,6 @@ jobs:
       - name: Install TextMate
         run: brew install --cask textmate
 
-      - name: Install Monokai dark theme for TextMate
-        run: |
-          echo "Installing Monokai dark theme for TextMate..."
-          mkdir -p ~/Library/Application\ Support/TextMate/Themes
-          curl -fsSL -o ~/Library/Application\ Support/TextMate/Themes/Monokai.tmTheme \
-            https://raw.githubusercontent.com/textmate/monokai.tmbundle/refs/heads/master/Themes/Monokai.tmTheme
-          echo "Monokai.tmTheme installed at ~/Library/Application Support/TextMate/Themes/Monokai.tmTheme"
-
-      - name: Configure TextMate dark theme (method 1)
-        run: |
-          echo "Configuring TextMate to use a dark theme..."
-          echo "Searching for Monokai theme in /Applications/TextMate.app and ~/Library/Application Support/TextMate/Themes..."
-          THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*Monokai*.tmTheme' -print -quit || true)
-          echo "THEME_PATH after Monokai search: $THEME_PATH"
-          if [ -z "$THEME_PATH" ]; then
-            echo "No Monokai theme found, searching for any dark theme..."
-            THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*.tmTheme' | grep -i dark | head -n1)
-            echo "THEME_PATH after dark theme search: $THEME_PATH"
-          fi
-          if [ -z "$THEME_PATH" ]; then
-            echo "No dark theme found, searching for any available theme..."
-            THEME_PATH=$(find /Applications/TextMate.app ~/Library/Application\ Support/TextMate/Themes 2>/dev/null -name '*.tmTheme' | head -n1)
-            echo "THEME_PATH after any theme search: $THEME_PATH"
-          fi
-          if [ -n "$THEME_PATH" ]; then
-            THEME_NAME=$(basename "$THEME_PATH" .tmTheme)
-            echo "Found theme: $THEME_NAME at $THEME_PATH"
-            echo "Attempting to extract UUID from $THEME_PATH..."
-            THEME_UUID=$(plutil -extract uuid xml1 -o - "$THEME_PATH" 2>/dev/null | grep -oE '[A-F0-9\-]{36}')
-            echo "THEME_UUID: $THEME_UUID"
-            if [ -n "$THEME_UUID" ]; then
-              echo "Setting themeUUID in defaults..."
-              defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
-              echo "Removing TextMate preferences plist to force reload..."
-              rm -f ~/Library/Preferences/com.macromates.TextMate.plist || true
-              echo "Re-setting themeUUID in defaults after plist removal..."
-              defaults write com.macromates.TextMate themeUUID "$THEME_UUID"
-              echo "Set TextMate theme to $THEME_NAME ($THEME_UUID) after plist removal"
-            else
-              echo "Could not extract theme UUID from $THEME_PATH. Trying AppleScript by name."
-              osascript -e "tell application \"TextMate\" to activate" -e "tell application \"System Events\" to tell process \"TextMate\" to keystroke \"T\" using {command down, option down}" -e "delay 1" -e "tell application \"System Events\" to keystroke '$THEME_NAME'" -e "delay 1" -e "tell application \"System Events\" to key code 36" || echo "AppleScript theme selection failed."
-            fi
-          else
-            echo "No theme found in TextMate installation after all search attempts."
-          fi
-          echo "TextMate dark theme configured"
-          sleep 2
-
       - name: Convert JSON to PLIST
         run: |
           echo "Converting syntaxes/JSONC.tmLanguage.json to JSONC.plist..."
@@ -130,20 +82,6 @@ jobs:
           sleep 2
           open -a "/Applications/TextMate.app" sample.jsonc
           sleep 5
-
-      - name: Set TextMate theme via AppleScript after opening file (method 2)
-        run: |
-          echo "Setting TextMate theme to Monokai via AppleScript (keyboard shortcut method)..."
-          osascript \
-            -e 'tell application "TextMate" to activate' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "t" using {control down, option down, command down}' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to keystroke "Monokai"' \
-            -e 'delay 1' \
-            -e 'tell application "System Events" to key code 36'
-          echo "AppleScript theme selection done. Waiting for UI update..."
-          sleep 2
 
       - name: List installed bundles
         run: |
