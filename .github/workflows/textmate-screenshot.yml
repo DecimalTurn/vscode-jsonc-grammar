@@ -26,7 +26,7 @@ jobs:
           # echo "Content of the generated JSONC.plist file:"
           # cat JSONC.plist
 
-      - name: Open file in TextMate (before installing grammar)
+      - name: Open file in TextMate
         run: |
           echo "Opening TextMate with sample.jsonc (pre-grammar)..."
           open -a "/Applications/TextMate.app" sample.jsonc
