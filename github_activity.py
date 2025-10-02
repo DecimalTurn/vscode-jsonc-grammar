@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 
-FILENAME = "Last_activity.txt"
+FILENAME = "last_activity.txt"
 
 def update_last_activity_file():
     today = datetime.date.today().isoformat()
@@ -21,7 +21,7 @@ def update_last_activity_file():
 def git_commit_and_push():
     try:
         subprocess.run(["git", "add", FILENAME], check=True)
-        subprocess.run(["git", "commit", "-m", "Update Last_activity.txt with current date"], check=True)
+        subprocess.run(["git", "commit", "-m", "Update last_activity.txt with current date"], check=True)
         subprocess.run(["git", "push", "origin"], check=True)
         print("Changes pushed to origin successfully.")
     except subprocess.CalledProcessError as e:
