@@ -31,4 +31,5 @@ jobs:
           bundler-cache: true
 
       - name: Compile linguist grammar
-        run: ./script/add-grammar --replace ${{ github.event.repository.name }} https://github.com/${{ github.repository }}
+        # run: ./script/add-grammar --replace ${{ github.event.repository.name }} https://github.com/${{ github.repository }}
+        run: ./script/add-grammar --replace vscode-jsonc-grammar https://github.com/${{ github.repository }}
