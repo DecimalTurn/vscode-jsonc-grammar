@@ -21,7 +21,7 @@ def format_grammar(data):
     # Instead, we replace "support.type" with "entity.name.tag" to give a better contrast similar as what is used in the JSON grammar (https://github.com/Nixinova/NovaGrammars/blob/main/grammars/json.yaml-tmLanguage)
     data = data.replace('support.type', 'entity.name.tag')
 
-   # Also note that the order seems important, so we need to remove to make sure the "string" token appears after the "entity" token
+   # Also note that the order seems important, so we need to make sure the "string" token appears after the "entity" token
     data = re.sub(
         r'"name":\s*"string\.json\.comments\s+entity\.name\.tag\.property-name\.json\.comments"',
         '"name": "entity.name.tag.property-name.json.comments string.json.comments"',
