@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install TextMate
         run: brew install --cask textmate
@@ -94,7 +94,7 @@ jobs:
           screencapture -x screenshots/textmate.png
 
       - name: Upload screenshot artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: textmate-jsonc-syntax-screenshots
           path: screenshots/*.png
