@@ -22,7 +22,7 @@ jobs:
         with:
           repository: github-linguist/linguist
 
-      - name: Checkout PR as submodule
+      - name: Checkout current repo/PR as submodule
         uses: actions/checkout@v6
         with:
           path: vendor/grammars/${{ env.REPO_PATH }}
